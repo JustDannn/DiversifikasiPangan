@@ -1,239 +1,255 @@
-# Food Diversification Analysis Based on Agro-Ecological Clustering in Indonesia
+# Agroecological Clustering for Carbohydrate Source Diversification in Indonesia
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## 📋 Overview
+> **A Clustering-Based Agroecological Approach to Identify Potential Carbohydrate Source Diversification in Indonesia**
 
-This research project analyzes **carbohydrate food diversification potential** across Indonesian provinces using **agro-ecological clustering** based on climate, soil, and geographical data. The study aims to identify optimal crop recommendations for each agro-ecological zone to enhance food security and agricultural resilience.
+## Table of Contents
 
-### Research Objectives
-
-1. **Characterize agro-ecological zones** across Indonesian provinces based on rainfall, soil types, and elevation data
-2. **Apply clustering algorithms** (K-Means and Hierarchical) to identify distinct agricultural zones
-3. **Map functional crop groups** to each cluster for targeted food diversification strategies
-4. **Provide data-driven recommendations** for carbohydrate crop diversification
+- [Overview](#overview)
+- [Research Objectives](#research-objectives)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Data Sources](#data-sources)
+- [Running the Notebook](#running-the-notebook)
+- [Key Results](#key-results)
+- [Citation](#citation)
+- [Contributors](#contributors)
+- [License](#license)
 
 ---
 
-## Repository Structure
+## Overview
+
+This research project employs **unsupervised machine learning techniques** (K-Means clustering) to identify agroecological zones suitable for carbohydrate crop diversification across 34 Indonesian provinces. The study integrates multi-source geospatial and climatological data to classify regions based on environmental characteristics and maps appropriate carbohydrate crop functional groups to each identified cluster.
+
+### Why This Matters
+
+Indonesia's food security heavily relies on rice, making the country vulnerable to climate change and agricultural disruptions. This research provides a **data-driven framework** for recommending alternative carbohydrate sources based on local agroecological conditions.
+
+---
+
+## Research Objectives
+
+1. **Identify distinct agroecological zones** across Indonesian provinces using clustering analysis
+2. **Integrate multi-source environmental data** (soil, rainfall, elevation) for comprehensive zoning
+3. **Map appropriate carbohydrate crop functional groups** to each identified zone
+4. **Provide evidence-based diversification recommendations** for food security policy
+
+## 📁 Project Structure
 
 ```
-Diversifikasi/
+DiversivikasiPangan/
+│
 ├── diversifikasipangan_final.ipynb    # Main analysis notebook
 ├── README.md                           # This documentation
-├── .gitattributes                      # Git LFS configuration for shapefiles
+├── methodology.md                      # Detailed methodology
+├── requirements.txt                    # Python dependencies
 │
-├── Jumlah Curah Hujan dan Jumlah Hari Hujan di Stasiun Pengamatan   BMKG 2011-2015.csv
-│   └── Rainfall data from BMKG weather stations (2011-2015)
+├── Data Sources/
+│   ├── Jumlah Curah Hujan dan Jumlah Hari Hujan di Stasiun
+│   │   Pengamatan BMKG, 2011-2015.csv     # Rainfall data
+│   │
+│   ├── JenisTanahIndonesia/               # Soil classification shapefiles
+│   │   ├── Jenis Tanah Indonesia.shp
+│   │   ├── Jenis Tanah Indonesia.dbf
+│   │   ├── Jenis Tanah Indonesia.shx
+│   │   ├── Jenis Tanah Indonesia.prj
+│   │   └── ...
+│   │
+│   └── SpotHeightIndonesia/               # Elevation data shapefiles
+│       ├── Spot Height 250K.shp
+│       ├── Spot Height 50K.shp
+│       └── ...
 │
-├── JenisTanahIndonesia/               # Soil type shapefile data
-│   └── Jenis Tanah Indonesia.shp      # FAO soil classification for Indonesia
-│
-└── SpotHeightIndonesia/               # Elevation shapefile data
-    ├── Spot Height 250K.shp           # 1:250,000 scale elevation points
-    └── Spot Height 50K.shp            # 1:50,000 scale elevation points
+└── Output/
+    └── hasil_clustering_diversifikasi.csv  # Final clustering results
+```
+
+---
+
+## Installation
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Jupyter Notebook or JupyterLab
+- Git (for cloning the repository)
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/DiversivikasiPangan.git
+cd DiversivikasiPangan
+```
+
+### Step 2: Create Virtual Environment (Recommended)
+
+```bash
+# Using venv
+python -m venv venv
+
+# Activate on Linux/macOS
+source venv/bin/activate
+
+# Activate on Windows
+venv\Scripts\activate
+```
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Verify Installation
+
+```bash
+python -c "import pandas, numpy, geopandas, sklearn; print('All packages installed successfully!')"
 ```
 
 ---
 
 ## Data Sources
 
-| Dataset              | Description                                                 | Source         | Format           |
-| -------------------- | ----------------------------------------------------------- | -------------- | ---------------- |
-| **Rainfall Data**    | Annual rainfall and rainy days by BMKG stations (2011-2015) | BMKG Indonesia | CSV              |
-| **Soil Types**       | FAO soil classification polygons                            | BIG Indonesia  | Shapefile (.shp) |
-| **Elevation (250K)** | Spot heights at 1:250,000 scale                             | BIG Indonesia  | Shapefile (.shp) |
-| **Elevation (50K)**  | Spot heights at 1:50,000 scale                              | BIG Indonesia  | Shapefile (.shp) |
+### 1. Soil Classification Data
 
-### Data Attributes
+- **Source**: FAO-UNESCO Soil Map of the World
+- **Format**: Shapefile (.shp)
+- **Spatial Resolution**: 1:5,000,000
+- **Location**: `JenisTanahIndonesia/`
 
-#### Rainfall CSV Columns
+### 2. Elevation Data
 
-- `Provinsi` - Province name
-- `Stasiun_BMKG` - Weather station name
-- `CH_YYYY` - Annual rainfall (mm) for year YYYY
-- `HH_YYYY` - Number of rainy days for year YYYY
+- **Source**: Indonesian Geospatial Agency (Badan Informasi Geospasial, BIG)
+- **Format**: Shapefile (.shp)
+- **Spatial Resolution**: 1:250,000 and 1:50,000
+- **Location**: `SpotHeightIndonesia/`
 
-#### Soil Shapefile Attributes
+### 3. Rainfall Data
 
-- `FAOSOIL` - FAO soil classification code
-- `DOMSOI` - Dominant soil type
-- `Sub_Group_` - Soil subgroup classification
-- `SQKM` - Area in square kilometers
-- `geometry` - Polygon geometry
-
-#### Elevation Shapefile Attributes
-
-- `ELEVAS` - Elevation in meters
-- `geometry` - Point geometry
+- **Source**: Indonesian Meteorological, Climatological, and Geophysical Agency (BMKG)
+- **Format**: CSV
+- **Temporal Coverage**: 2011-2015 (5-year average)
+- **Stations**: 34 observation stations across Indonesian provinces
+- **Location**: Root directory
 
 ---
 
-## Prerequisites & Installation
-
-### System Requirements
-
-- **Python**: 3.8 or higher
-- **RAM**: Minimum 8GB recommended
-- **Storage**: ~500MB for data and outputs
-
-### Required Python Packages
-
-```bash
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# or
-venv\Scripts\activate     # Windows
-
-# Install required packages
-pip install -r requirements.txt
-```
-
-### Package List
-
-Create a `requirements.txt` file with:
-
-```txt
-pandas>=1.5.0
-numpy>=1.21.0
-geopandas>=0.12.0
-shapely>=2.0.0
-matplotlib>=3.5.0
-seaborn>=0.12.0
-scikit-learn>=1.1.0
-scipy>=1.9.0
-jupyter>=1.0.0
-notebook>=6.5.0
-```
-
-Or install directly:
-
-```bash
-pip install pandas numpy geopandas shapely matplotlib seaborn scikit-learn scipy jupyter
-```
-
 ## Running the Notebook
 
-### Step 1: Clone the Repository
-
-```bash
-git clone <repository-url>
-cd Diversifikasi
-```
-
-> **Note:** This repository uses Git LFS for shapefile storage. Ensure Git LFS is installed:
->
-> ```bash
-> git lfs install
-> git lfs pull
-> ```
-
-### Step 2: Activate Environment & Install Dependencies
-
-```bash
-# Activate virtual environment
-source venv/bin/activate  # Linux/macOS
-
-# Install packages
-pip install -r requirements.txt
-```
-
-### Step 3: Launch Jupyter Notebook
+### Option 1: Jupyter Notebook
 
 ```bash
 jupyter notebook diversifikasipangan_final.ipynb
 ```
 
-Or use JupyterLab:
+### Option 2: JupyterLab
 
 ```bash
-pip install jupyterlab
-jupyter lab
+jupyter lab diversifikasipangan_final.ipynb
 ```
 
-### Step 4: Run All Cells
+### Option 3: VS Code
 
-Execute cells sequentially from top to bottom. The notebook is organized into these sections:
+1. Open VS Code
+2. Install the Python and Jupyter extensions
+3. Open `diversifikasipangan_final.ipynb`
+4. Select Python interpreter (your virtual environment)
+5. Run all cells sequentially
 
-1. **Library Imports** (Cell 1)
-2. **Data Loading** (Cells 2-19)
-3. **Exploratory Data Analysis** (Cells 20-36)
-4. **Feature Engineering** (Cells 37-51)
-5. **Clustering Analysis** (Cells 52-72)
-6. **Crop Recommendation Mapping** (Cells 73-104)
+### Execution Order
 
-## 🗺️ Results: Agro-Ecological Clusters
+The notebook is organized into **15 sequential stages**. Execute cells in order:
 
-The analysis identifies **5 distinct agro-ecological zones**:
+| Stage | Description             | Cells         |
+| ----- | ----------------------- | ------------- |
+| 1-3   | Data Loading            | Cells 1-13    |
+| 4-5   | Data Exploration        | Cells 14-22   |
+| 6     | Feature Engineering     | Cells 23-35   |
+| 7     | Preprocessing & PCA     | Cells 36-42   |
+| 8     | Optimal k Determination | Cells 43-50   |
+| 9     | K-Means Clustering      | Cells 51-55   |
+| 10    | Hierarchical Validation | Cells 56-60   |
+| 11    | Cluster Profiling       | Cells 61-70   |
+| 12-13 | Crop Mapping            | Cells 71-85   |
+| 14    | Visualization           | Cells 86-100  |
+| 15    | Export Results          | Cells 101-117 |
 
-### Cluster 0: Dry–Moist Calcareous Sulawesi Zone
+### Expected Runtime
 
-- **Provinces:** Sulawesi regions
-- **Characteristics:** Moderate-low rainfall (~1,587 mm), calcareous soils
-- **Primary Crops:** Maize, Sorghum, Foxtail Millet
-- **Diversification:** Porang, Ganyong, Drought-tolerant Cassava
-
-### Cluster 1: Humid Peat–Alluvial Sumatra Zone
-
-- **Provinces:** Sumatra regions
-- **Characteristics:** High rainfall (~2,769 mm), peat and alluvial soils
-- **Primary Crops:** Sago, Wetland Rice
-- **Diversification:** Cassava, Taro, Sweet Potato
-
-### Cluster 2: Extreme Peat Kalimantan Wet Zone
-
-- **Provinces:** Kalimantan regions
-- **Characteristics:** Very high rainfall (~2,758 mm), extreme peat soils
-- **Primary Crops:** Sago
-- **Diversification:** Taro, Wild Yams
-
-### Cluster 3: Volcanic Intensive Java–Bali Zone
-
-- **Provinces:** Java, Bali, DKI Jakarta, DI Yogyakarta
-- **Characteristics:** Moderate rainfall (~2,016 mm), highly fertile volcanic soils
-- **Primary Crops:** Rice, Maize
-- **Diversification:** Potato, Sweet Potato, Cassava
-
-### Cluster 4: Equatorial Humid Core (Maluku–Papua)
-
-- **Provinces:** Maluku, Papua regions
-- **Characteristics:** Extreme rainfall (~3,402 mm), high variability
-- **Primary Crops:** Sago
-- **Diversification:** Taro, Sweet Potato
+- **Full notebook execution**: ~2-5 minutes
+- **Hardware requirements**: 4GB RAM minimum, 8GB recommended
 
 ---
 
-## Functional Crop Groups
+## Key Results
 
-| Group                       | Crops                               | Water Requirement           | Soil Preference      |
-| --------------------------- | ----------------------------------- | --------------------------- | -------------------- |
-| **Wetland Cereals**         | Rice                                | High (>1,500 mm)            | Alluvial, Volcanic   |
-| **Dryland Cereals**         | Maize, Sorghum, Millet              | Low-Moderate (600-1,200 mm) | Volcanic, Calcareous |
-| **Root & Tubers (Humid)**   | Cassava, Taro, Sweet Potato, Potato | Moderate (1,000-2,000 mm)   | Volcanic, Alluvial   |
-| **Palms & Starch Trees**    | Sago, Aren, Enau                    | Very High (>2,500 mm)       | Organic/Peat, Swamp  |
-| **Drought-Resilient Roots** | Ganyong, Porang, Garut, Uwi         | Low (<1,000 mm)             | Calcareous, Sandy    |
+### Identified Agroecological Zones (5 Clusters)
+
+| Cluster | Zone Name                     | Provinces | Avg Rainfall | Primary Crops          |
+| ------- | ----------------------------- | --------- | ------------ | ---------------------- |
+| **C0**  | Dry–Moist Calcareous Sulawesi | 9         | 1,587 mm     | Maize, Sorghum, Millet |
+| **C1**  | Humid Peat–Alluvial Sumatra   | 10        | 2,769 mm     | Sago, Rice             |
+| **C2**  | Extreme Peat Kalimantan       | 7         | 2,758 mm     | Sago                   |
+| **C3**  | Volcanic Intensive Java–Bali  | 7         | 2,016 mm     | Rice, Maize            |
+| **C4**  | Equatorial Humid Maluku–Papua | 1         | 3,402 mm     | Sago                   |
+
+### Carbohydrate Crop Functional Groups
+
+| Functional Group  | Representative Crops        | Water Requirement    | Target Zones |
+| ----------------- | --------------------------- | -------------------- | ------------ |
+| Wetland Cereals   | Rice                        | High (>1500 mm)      | C1, C3       |
+| Dryland Cereals   | Maize, Sorghum, Millet      | Low-Medium           | C0, C3       |
+| Root & Tubers     | Cassava, Taro, Sweet Potato | Medium               | All zones    |
+| Palms & Starch    | Sago, Sugar Palm            | Very High (>2500 mm) | C1, C2, C4   |
+| Drought-Resilient | Porang, Ganyong, Arrowroot  | Low (<1000 mm)       | C0           |
+
+### Clustering Quality Metrics (k=5)
+
+| Metric                                | Value | Interpretation              |
+| ------------------------------------- | ----- | --------------------------- |
+| Silhouette Score                      | 0.414 | Good cluster cohesion       |
+| Calinski-Harabasz Index               | 23.4  | Moderate cluster separation |
+| Davies-Bouldin Index                  | 0.738 | Good (<1 is desirable)      |
+| Adjusted Rand Index (vs Hierarchical) | 0.562 | Moderate method agreement   |
 
 ---
 
-## Key Findings
+## Output Files
 
-1. **Volcanic regions (Java-Bali)** have the highest agricultural potential for intensive rice-maize systems
+### `hasil_clustering_diversifikasi.csv`
 
-2. **Peatland regions (Kalimantan, Sumatra)** require focus on sago and wetland-adapted crops
+The main output file containing clustering results and recommendations:
 
-3. **Eastern Indonesia (Maluku-Papua)** should prioritize sago as primary carbohydrate source
-
-4. **Sulawesi and drier regions** benefit from drought-resilient crops like sorghum and porang
-
-5. **Diversification strategies** should be tailored to each agro-ecological zone for resilience
-
----
+| Column                  | Description                                  |
+| ----------------------- | -------------------------------------------- |
+| `Provinsi`              | Province name                                |
+| `Region`                | Geographic region (Sumatra, Java_Bali, etc.) |
+| `Cluster_KMeans`        | Cluster assignment (0-4)                     |
+| `Cluster_Name`          | Descriptive zone name                        |
+| `Mean_Annual_Rainfall`  | Average rainfall (mm/year)                   |
+| `Mean_Rainy_Days`       | Average rainy days per year                  |
+| `Rainfall_Variability`  | Rainfall standard deviation                  |
+| `Aridity_Index`         | Climate aridity indicator                    |
+| `Climate_Zone`          | Climate classification                       |
+| `Soil_Volcanic`         | Volcanic soil suitability (0-1)              |
+| `Soil_Alluvial`         | Alluvial soil suitability (0-1)              |
+| `Soil_Organic_Peat`     | Peat soil index (0-1)                        |
+| `Soil_Calcareous`       | Calcareous soil index (0-1)                  |
+| `Soil_Quality_Index`    | Composite soil quality score                 |
+| `Primary_Crops`         | Recommended primary crops                    |
+| `Diversification_Crops` | Recommended diversification crops            |
 
 ## Acknowledgments
 
-- **BMKG Indonesia** for rainfall data
-- **BIG (Badan Informasi Geospasial)** for geospatial data
-- **FAO** for soil classification standards
+- **Indonesian Geospatial Agency (BIG)** for elevation data
+- **BMKG** for rainfall observation data
+- **FAO-UNESCO** for soil classification data
+- **Telkom University** for academic support
+
+---
+
+_Last Updated: December 2025_
