@@ -1,0 +1,145 @@
+# Git LFS Configuration for Large Geospatial Files
+# This file ensures proper handling of binary shapefile components
+
+# =====================================================
+# JenisTanahIndonesia - Indonesian Soil Type Shapefiles
+# =====================================================
+
+# Shapefile main geometry file
+JenisTanahIndonesia/*.shp filter=lfs diff=lfs merge=lfs -text
+
+# Shapefile index file
+JenisTanahIndonesia/*.shx filter=lfs diff=lfs merge=lfs -text
+
+# Database file (attribute data)
+JenisTanahIndonesia/*.dbf filter=lfs diff=lfs merge=lfs -text
+
+# Projection file
+JenisTanahIndonesia/*.prj filter=lfs diff=lfs merge=lfs -text
+
+# Spatial index files
+JenisTanahIndonesia/*.sbn filter=lfs diff=lfs merge=lfs -text
+JenisTanahIndonesia/*.sbx filter=lfs diff=lfs merge=lfs -text
+
+# Feature index files  
+JenisTanahIndonesia/*.fbn filter=lfs diff=lfs merge=lfs -text
+JenisTanahIndonesia/*.fbx filter=lfs diff=lfs merge=lfs -text
+
+# Attribute index files
+JenisTanahIndonesia/*.ain filter=lfs diff=lfs merge=lfs -text
+JenisTanahIndonesia/*.aih filter=lfs diff=lfs merge=lfs -text
+
+# Geocoding index files
+JenisTanahIndonesia/*.ixs filter=lfs diff=lfs merge=lfs -text
+JenisTanahIndonesia/*.mxs filter=lfs diff=lfs merge=lfs -text
+
+# XML metadata
+JenisTanahIndonesia/*.xml filter=lfs diff=lfs merge=lfs -text
+
+# Code page specification
+JenisTanahIndonesia/*.cpg filter=lfs diff=lfs merge=lfs -text
+
+# =====================================================
+# SpotHeightIndonesia - Indonesian Elevation Shapefiles
+# =====================================================
+
+# Shapefile main geometry file
+SpotHeightIndonesia/*.shp filter=lfs diff=lfs merge=lfs -text
+
+# Shapefile index file
+SpotHeightIndonesia/*.shx filter=lfs diff=lfs merge=lfs -text
+
+# Database file (attribute data)
+SpotHeightIndonesia/*.dbf filter=lfs diff=lfs merge=lfs -text
+
+# Projection file
+SpotHeightIndonesia/*.prj filter=lfs diff=lfs merge=lfs -text
+
+# Spatial index files
+SpotHeightIndonesia/*.sbn filter=lfs diff=lfs merge=lfs -text
+SpotHeightIndonesia/*.sbx filter=lfs diff=lfs merge=lfs -text
+
+# Feature index files
+SpotHeightIndonesia/*.fbn filter=lfs diff=lfs merge=lfs -text
+SpotHeightIndonesia/*.fbx filter=lfs diff=lfs merge=lfs -text
+
+# Attribute index files
+SpotHeightIndonesia/*.ain filter=lfs diff=lfs merge=lfs -text
+SpotHeightIndonesia/*.aih filter=lfs diff=lfs merge=lfs -text
+
+# Geocoding index files
+SpotHeightIndonesia/*.ixs filter=lfs diff=lfs merge=lfs -text
+SpotHeightIndonesia/*.mxs filter=lfs diff=lfs merge=lfs -text
+
+# XML metadata
+SpotHeightIndonesia/*.xml filter=lfs diff=lfs merge=lfs -text
+
+# Code page specification
+SpotHeightIndonesia/*.cpg filter=lfs diff=lfs merge=lfs -text
+
+# =====================================================
+# Global Shapefile Patterns (Catch-all)
+# =====================================================
+
+# Main shapefile components anywhere in repository
+*.shp filter=lfs diff=lfs merge=lfs -text
+*.shx filter=lfs diff=lfs merge=lfs -text
+*.dbf filter=lfs diff=lfs merge=lfs -text
+*.prj filter=lfs diff=lfs merge=lfs -text
+
+# Optional shapefile components
+*.sbn filter=lfs diff=lfs merge=lfs -text
+*.sbx filter=lfs diff=lfs merge=lfs -text
+*.fbn filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.ain filter=lfs diff=lfs merge=lfs -text
+*.aih filter=lfs diff=lfs merge=lfs -text
+*.ixs filter=lfs diff=lfs merge=lfs -text
+*.mxs filter=lfs diff=lfs merge=lfs -text
+*.cpg filter=lfs diff=lfs merge=lfs -text
+
+# =====================================================
+# Other Large/Binary Files
+# =====================================================
+
+# GeoJSON files (can be large)
+*.geojson filter=lfs diff=lfs merge=lfs -text
+
+# GeoPackage files
+*.gpkg filter=lfs diff=lfs merge=lfs -text
+
+# KML/KMZ files
+*.kml filter=lfs diff=lfs merge=lfs -text
+*.kmz filter=lfs diff=lfs merge=lfs -text
+
+# Raster files
+*.tif filter=lfs diff=lfs merge=lfs -text
+*.tiff filter=lfs diff=lfs merge=lfs -text
+*.geotiff filter=lfs diff=lfs merge=lfs -text
+
+# Large CSV files (>50MB typically)
+# Uncomment if needed:
+# *.csv filter=lfs diff=lfs merge=lfs -text
+
+# =====================================================
+# Text File Normalization
+# =====================================================
+
+# Python files - normalize line endings
+*.py text eol=lf
+
+# Jupyter notebooks - normalize line endings  
+*.ipynb text eol=lf
+
+# Markdown files
+*.md text eol=lf
+
+# Requirements file
+requirements.txt text eol=lf
+
+# =====================================================
+# Linguist Overrides for GitHub Statistics
+# =====================================================
+
+# Treat notebooks as documentation for language stats
+*.ipynb linguist-documentation
